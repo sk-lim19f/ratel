@@ -1,0 +1,1303 @@
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  [32m+[0m create[0m
+
+Terraform planned the following actions, but then encountered a problem:
+
+[1m  # aws_iam_instance_profile.ecs_instance_profile[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_instance_profile" "ecs_instance_profile" {
+      [32m+[0m[0m arn         = (known after apply)
+      [32m+[0m[0m create_date = (known after apply)
+      [32m+[0m[0m id          = (known after apply)
+      [32m+[0m[0m name        = "ecs-instance-profile"
+      [32m+[0m[0m name_prefix = (known after apply)
+      [32m+[0m[0m path        = "/"
+      [32m+[0m[0m role        = "ecs-execution-role"
+      [32m+[0m[0m tags_all    = (known after apply)
+      [32m+[0m[0m unique_id   = (known after apply)
+    }
+
+[1m  # aws_iam_policy.ecs_service_policy[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_policy" "ecs_service_policy" {
+      [32m+[0m[0m arn              = (known after apply)
+      [32m+[0m[0m attachment_count = (known after apply)
+      [32m+[0m[0m description      = "Policy for ECS services"
+      [32m+[0m[0m id               = (known after apply)
+      [32m+[0m[0m name             = "ecs-service-policy"
+      [32m+[0m[0m name_prefix      = (known after apply)
+      [32m+[0m[0m path             = "/"
+      [32m+[0m[0m policy           = jsonencode(
+            {
+              [32m+[0m[0m Statement = [
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action   = [
+                          [32m+[0m[0m "elasticloadbalancing:*",
+                          [32m+[0m[0m "ec2:Describe*",
+                          [32m+[0m[0m "cloudwatch:PutMetricData",
+                          [32m+[0m[0m "logs:CreateLogStream",
+                          [32m+[0m[0m "logs:PutLogEvents",
+                        ]
+                      [32m+[0m[0m Effect   = "Allow"
+                      [32m+[0m[0m Resource = "*"
+                    },
+                ]
+              [32m+[0m[0m Version   = "2012-10-17"
+            }
+        )
+      [32m+[0m[0m policy_id        = (known after apply)
+      [32m+[0m[0m tags_all         = (known after apply)
+    }
+
+[1m  # aws_iam_policy.ecs_task_execution_policy[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_policy" "ecs_task_execution_policy" {
+      [32m+[0m[0m arn              = (known after apply)
+      [32m+[0m[0m attachment_count = (known after apply)
+      [32m+[0m[0m description      = "Policy for ECS task execution to pull images and send logs"
+      [32m+[0m[0m id               = (known after apply)
+      [32m+[0m[0m name             = "ecs-task-execution-policy"
+      [32m+[0m[0m name_prefix      = (known after apply)
+      [32m+[0m[0m path             = "/"
+      [32m+[0m[0m policy           = jsonencode(
+            {
+              [32m+[0m[0m Statement = [
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action   = [
+                          [32m+[0m[0m "ecr:GetDownloadUrlForLayer",
+                          [32m+[0m[0m "ecr:BatchGetImage",
+                          [32m+[0m[0m "ecr:BatchCheckLayerAvailability",
+                        ]
+                      [32m+[0m[0m Effect   = "Allow"
+                      [32m+[0m[0m Resource = "*"
+                    },
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action   = [
+                          [32m+[0m[0m "logs:CreateLogStream",
+                          [32m+[0m[0m "logs:PutLogEvents",
+                        ]
+                      [32m+[0m[0m Effect   = "Allow"
+                      [32m+[0m[0m Resource = "*"
+                    },
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action   = [
+                          [32m+[0m[0m "ssm:GetParameters",
+                        ]
+                      [32m+[0m[0m Effect   = "Allow"
+                      [32m+[0m[0m Resource = "*"
+                    },
+                ]
+              [32m+[0m[0m Version   = "2012-10-17"
+            }
+        )
+      [32m+[0m[0m policy_id        = (known after apply)
+      [32m+[0m[0m tags_all         = (known after apply)
+    }
+
+[1m  # aws_iam_policy.ecs_task_role_policy[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_policy" "ecs_task_role_policy" {
+      [32m+[0m[0m arn              = (known after apply)
+      [32m+[0m[0m attachment_count = (known after apply)
+      [32m+[0m[0m description      = "Policy for ECS task role"
+      [32m+[0m[0m id               = (known after apply)
+      [32m+[0m[0m name             = "ecs-task-role-policy"
+      [32m+[0m[0m name_prefix      = (known after apply)
+      [32m+[0m[0m path             = "/"
+      [32m+[0m[0m policy           = jsonencode(
+            {
+              [32m+[0m[0m Statement = [
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action   = [
+                          [32m+[0m[0m "s3:GetObject",
+                          [32m+[0m[0m "s3:PutObject",
+                        ]
+                      [32m+[0m[0m Effect   = "Allow"
+                      [32m+[0m[0m Resource = "*"
+                    },
+                ]
+              [32m+[0m[0m Version   = "2012-10-17"
+            }
+        )
+      [32m+[0m[0m policy_id        = (known after apply)
+      [32m+[0m[0m tags_all         = (known after apply)
+    }
+
+[1m  # aws_iam_role.ecs_execution_role[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role" "ecs_execution_role" {
+      [32m+[0m[0m arn                   = (known after apply)
+      [32m+[0m[0m assume_role_policy    = jsonencode(
+            {
+              [32m+[0m[0m Statement = [
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = "sts:AssumeRole"
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Principal = {
+                          [32m+[0m[0m Service = "ecs-tasks.amazonaws.com"
+                        }
+                    },
+                ]
+              [32m+[0m[0m Version   = "2012-10-17"
+            }
+        )
+      [32m+[0m[0m create_date           = (known after apply)
+      [32m+[0m[0m force_detach_policies = false
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m managed_policy_arns   = (known after apply)
+      [32m+[0m[0m max_session_duration  = 3600
+      [32m+[0m[0m name                  = "ecs-execution-role"
+      [32m+[0m[0m name_prefix           = (known after apply)
+      [32m+[0m[0m path                  = "/"
+      [32m+[0m[0m tags_all              = (known after apply)
+      [32m+[0m[0m unique_id             = (known after apply)
+    }
+
+[1m  # aws_iam_role.ecs_service_role[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role" "ecs_service_role" {
+      [32m+[0m[0m arn                   = (known after apply)
+      [32m+[0m[0m assume_role_policy    = jsonencode(
+            {
+              [32m+[0m[0m Statement = [
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = "sts:AssumeRole"
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Principal = {
+                          [32m+[0m[0m Service = "ecs.amazonaws.com"
+                        }
+                    },
+                ]
+              [32m+[0m[0m Version   = "2012-10-17"
+            }
+        )
+      [32m+[0m[0m create_date           = (known after apply)
+      [32m+[0m[0m force_detach_policies = false
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m managed_policy_arns   = (known after apply)
+      [32m+[0m[0m max_session_duration  = 3600
+      [32m+[0m[0m name                  = "ecs-service-role"
+      [32m+[0m[0m name_prefix           = (known after apply)
+      [32m+[0m[0m path                  = "/"
+      [32m+[0m[0m tags_all              = (known after apply)
+      [32m+[0m[0m unique_id             = (known after apply)
+    }
+
+[1m  # aws_iam_role.ecs_task_role[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role" "ecs_task_role" {
+      [32m+[0m[0m arn                   = (known after apply)
+      [32m+[0m[0m assume_role_policy    = jsonencode(
+            {
+              [32m+[0m[0m Statement = [
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = "sts:AssumeRole"
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Principal = {
+                          [32m+[0m[0m Service = "ecs-tasks.amazonaws.com"
+                        }
+                    },
+                ]
+              [32m+[0m[0m Version   = "2012-10-17"
+            }
+        )
+      [32m+[0m[0m create_date           = (known after apply)
+      [32m+[0m[0m force_detach_policies = false
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m managed_policy_arns   = (known after apply)
+      [32m+[0m[0m max_session_duration  = 3600
+      [32m+[0m[0m name                  = "ecs-task-role"
+      [32m+[0m[0m name_prefix           = (known after apply)
+      [32m+[0m[0m path                  = "/"
+      [32m+[0m[0m tags_all              = (known after apply)
+      [32m+[0m[0m unique_id             = (known after apply)
+    }
+
+[1m  # aws_iam_role_policy_attachment.ecs_execution_role_attach[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "ecs_execution_role_attach" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = (known after apply)
+      [32m+[0m[0m role       = "ecs-execution-role"
+    }
+
+[1m  # aws_iam_role_policy_attachment.ecs_service_role_attach[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "ecs_service_role_attach" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = (known after apply)
+      [32m+[0m[0m role       = "ecs-service-role"
+    }
+
+[1m  # aws_iam_role_policy_attachment.ecs_task_role_attach[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "ecs_task_role_attach" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = (known after apply)
+      [32m+[0m[0m role       = "ecs-task-role"
+    }
+
+[1m  # module.alb["private_alb"].aws_lb.this[0m will be created
+[0m  [32m+[0m[0m resource "aws_lb" "this" {
+      [32m+[0m[0m arn                                                          = (known after apply)
+      [32m+[0m[0m arn_suffix                                                   = (known after apply)
+      [32m+[0m[0m client_keep_alive                                            = 3600
+      [32m+[0m[0m desync_mitigation_mode                                       = "defensive"
+      [32m+[0m[0m dns_name                                                     = (known after apply)
+      [32m+[0m[0m drop_invalid_header_fields                                   = false
+      [32m+[0m[0m enable_deletion_protection                                   = false
+      [32m+[0m[0m enable_http2                                                 = true
+      [32m+[0m[0m enable_tls_version_and_cipher_suite_headers                  = false
+      [32m+[0m[0m enable_waf_fail_open                                         = false
+      [32m+[0m[0m enable_xff_client_port                                       = false
+      [32m+[0m[0m enforce_security_group_inbound_rules_on_private_link_traffic = (known after apply)
+      [32m+[0m[0m id                                                           = (known after apply)
+      [32m+[0m[0m idle_timeout                                                 = 60
+      [32m+[0m[0m internal                                                     = true
+      [32m+[0m[0m ip_address_type                                              = (known after apply)
+      [32m+[0m[0m load_balancer_type                                           = "application"
+      [32m+[0m[0m name                                                         = "dev-private-alb"
+      [32m+[0m[0m name_prefix                                                  = (known after apply)
+      [32m+[0m[0m preserve_host_header                                         = false
+      [32m+[0m[0m security_groups                                              = [
+          [32m+[0m[0m "sg-0987654321fedcba",
+        ]
+      [32m+[0m[0m subnets                                                      = (known after apply)
+      [32m+[0m[0m tags                                                         = {
+          [32m+[0m[0m "Environment" = "DEV"
+          [32m+[0m[0m "Name"        = "dev-private-alb"
+        }
+      [32m+[0m[0m tags_all                                                     = {
+          [32m+[0m[0m "Environment" = "DEV"
+          [32m+[0m[0m "Name"        = "dev-private-alb"
+        }
+      [32m+[0m[0m vpc_id                                                       = (known after apply)
+      [32m+[0m[0m xff_header_processing_mode                                   = "append"
+      [32m+[0m[0m zone_id                                                      = (known after apply)
+    }
+
+[1m  # module.alb["private_alb"].aws_lb_listener.listener_http[0m will be created
+[0m  [32m+[0m[0m resource "aws_lb_listener" "listener_http" {
+      [32m+[0m[0m arn               = (known after apply)
+      [32m+[0m[0m id                = (known after apply)
+      [32m+[0m[0m load_balancer_arn = (known after apply)
+      [32m+[0m[0m port              = 80
+      [32m+[0m[0m protocol          = "HTTP"
+      [32m+[0m[0m ssl_policy        = (known after apply)
+      [32m+[0m[0m tags_all          = (known after apply)
+
+      [32m+[0m[0m default_action {
+          [32m+[0m[0m order            = (known after apply)
+          [32m+[0m[0m target_group_arn = (known after apply)
+          [32m+[0m[0m type             = "forward"
+        }
+    }
+
+[1m  # module.alb["private_alb"].aws_lb_listener.listener_https[0m will be created
+[0m  [32m+[0m[0m resource "aws_lb_listener" "listener_https" {
+      [32m+[0m[0m arn               = (known after apply)
+      [32m+[0m[0m certificate_arn   = "arn:aws:acm:ap-northeast-2:512900982215:certificate/9f22d2e2-0fcb-436b-91ab-86047d3911b1"
+      [32m+[0m[0m id                = (known after apply)
+      [32m+[0m[0m load_balancer_arn = (known after apply)
+      [32m+[0m[0m port              = 443
+      [32m+[0m[0m protocol          = "HTTPS"
+      [32m+[0m[0m ssl_policy        = "ELBSecurityPolicy-2016-08"
+      [32m+[0m[0m tags_all          = (known after apply)
+
+      [32m+[0m[0m default_action {
+          [32m+[0m[0m order            = (known after apply)
+          [32m+[0m[0m target_group_arn = (known after apply)
+          [32m+[0m[0m type             = "forward"
+        }
+    }
+
+[1m  # module.alb["private_alb"].aws_lb_target_group.tg[0m will be created
+[0m  [32m+[0m[0m resource "aws_lb_target_group" "tg" {
+      [32m+[0m[0m arn                                = (known after apply)
+      [32m+[0m[0m arn_suffix                         = (known after apply)
+      [32m+[0m[0m connection_termination             = (known after apply)
+      [32m+[0m[0m deregistration_delay               = "300"
+      [32m+[0m[0m id                                 = (known after apply)
+      [32m+[0m[0m ip_address_type                    = (known after apply)
+      [32m+[0m[0m lambda_multi_value_headers_enabled = false
+      [32m+[0m[0m load_balancer_arns                 = (known after apply)
+      [32m+[0m[0m load_balancing_algorithm_type      = (known after apply)
+      [32m+[0m[0m load_balancing_anomaly_mitigation  = (known after apply)
+      [32m+[0m[0m load_balancing_cross_zone_enabled  = (known after apply)
+      [32m+[0m[0m name                               = "dev-private-tg"
+      [32m+[0m[0m name_prefix                        = (known after apply)
+      [32m+[0m[0m port                               = 80
+      [32m+[0m[0m preserve_client_ip                 = (known after apply)
+      [32m+[0m[0m protocol                           = "HTTP"
+      [32m+[0m[0m protocol_version                   = (known after apply)
+      [32m+[0m[0m proxy_protocol_v2                  = false
+      [32m+[0m[0m slow_start                         = 0
+      [32m+[0m[0m tags                               = {
+          [32m+[0m[0m "Name" = "DEV-tg"
+        }
+      [32m+[0m[0m tags_all                           = {
+          [32m+[0m[0m "Name" = "DEV-tg"
+        }
+      [32m+[0m[0m target_type                        = "ip"
+      [32m+[0m[0m vpc_id                             = (known after apply)
+
+      [32m+[0m[0m health_check {
+          [32m+[0m[0m enabled             = true
+          [32m+[0m[0m healthy_threshold   = 2
+          [32m+[0m[0m interval            = 30
+          [32m+[0m[0m matcher             = "200-299"
+          [32m+[0m[0m path                = "/health"
+          [32m+[0m[0m port                = "traffic-port"
+          [32m+[0m[0m protocol            = "HTTP"
+          [32m+[0m[0m timeout             = 5
+          [32m+[0m[0m unhealthy_threshold = 2
+        }
+    }
+
+[1m  # module.alb["private_alb"].aws_lb_target_group_attachment.tg_attachment[0m will be created
+[0m  [32m+[0m[0m resource "aws_lb_target_group_attachment" "tg_attachment" {
+      [32m+[0m[0m id               = (known after apply)
+      [32m+[0m[0m port             = 80
+      [32m+[0m[0m target_group_arn = (known after apply)
+      [32m+[0m[0m target_id        = "192.168.1.10"
+    }
+
+[1m  # module.alb["public_alb"].aws_lb.this[0m will be created
+[0m  [32m+[0m[0m resource "aws_lb" "this" {
+      [32m+[0m[0m arn                                                          = (known after apply)
+      [32m+[0m[0m arn_suffix                                                   = (known after apply)
+      [32m+[0m[0m client_keep_alive                                            = 3600
+      [32m+[0m[0m desync_mitigation_mode                                       = "defensive"
+      [32m+[0m[0m dns_name                                                     = (known after apply)
+      [32m+[0m[0m drop_invalid_header_fields                                   = false
+      [32m+[0m[0m enable_deletion_protection                                   = false
+      [32m+[0m[0m enable_http2                                                 = true
+      [32m+[0m[0m enable_tls_version_and_cipher_suite_headers                  = false
+      [32m+[0m[0m enable_waf_fail_open                                         = false
+      [32m+[0m[0m enable_xff_client_port                                       = false
+      [32m+[0m[0m enforce_security_group_inbound_rules_on_private_link_traffic = (known after apply)
+      [32m+[0m[0m id                                                           = (known after apply)
+      [32m+[0m[0m idle_timeout                                                 = 60
+      [32m+[0m[0m internal                                                     = false
+      [32m+[0m[0m ip_address_type                                              = (known after apply)
+      [32m+[0m[0m load_balancer_type                                           = "application"
+      [32m+[0m[0m name                                                         = "dev-public-alb"
+      [32m+[0m[0m name_prefix                                                  = (known after apply)
+      [32m+[0m[0m preserve_host_header                                         = false
+      [32m+[0m[0m security_groups                                              = [
+          [32m+[0m[0m "sg-0123456789abcdef0",
+        ]
+      [32m+[0m[0m subnets                                                      = (known after apply)
+      [32m+[0m[0m tags                                                         = {
+          [32m+[0m[0m "Environment" = "DEV"
+          [32m+[0m[0m "Name"        = "dev-public-alb"
+        }
+      [32m+[0m[0m tags_all                                                     = {
+          [32m+[0m[0m "Environment" = "DEV"
+          [32m+[0m[0m "Name"        = "dev-public-alb"
+        }
+      [32m+[0m[0m vpc_id                                                       = (known after apply)
+      [32m+[0m[0m xff_header_processing_mode                                   = "append"
+      [32m+[0m[0m zone_id                                                      = (known after apply)
+    }
+
+[1m  # module.alb["public_alb"].aws_lb_listener.listener_http[0m will be created
+[0m  [32m+[0m[0m resource "aws_lb_listener" "listener_http" {
+      [32m+[0m[0m arn               = (known after apply)
+      [32m+[0m[0m id                = (known after apply)
+      [32m+[0m[0m load_balancer_arn = (known after apply)
+      [32m+[0m[0m port              = 80
+      [32m+[0m[0m protocol          = "HTTP"
+      [32m+[0m[0m ssl_policy        = (known after apply)
+      [32m+[0m[0m tags_all          = (known after apply)
+
+      [32m+[0m[0m default_action {
+          [32m+[0m[0m order            = (known after apply)
+          [32m+[0m[0m target_group_arn = (known after apply)
+          [32m+[0m[0m type             = "redirect"
+
+          [32m+[0m[0m redirect {
+              [32m+[0m[0m host        = "#{host}"
+              [32m+[0m[0m path        = "/#{path}"
+              [32m+[0m[0m port        = "443"
+              [32m+[0m[0m protocol    = "HTTPS"
+              [32m+[0m[0m query       = "#{query}"
+              [32m+[0m[0m status_code = "HTTP_301"
+            }
+        }
+    }
+
+[1m  # module.alb["public_alb"].aws_lb_listener.listener_https[0m will be created
+[0m  [32m+[0m[0m resource "aws_lb_listener" "listener_https" {
+      [32m+[0m[0m arn               = (known after apply)
+      [32m+[0m[0m certificate_arn   = "arn:aws:acm:ap-northeast-2:512900982215:certificate/9f22d2e2-0fcb-436b-91ab-86047d3911b1"
+      [32m+[0m[0m id                = (known after apply)
+      [32m+[0m[0m load_balancer_arn = (known after apply)
+      [32m+[0m[0m port              = 443
+      [32m+[0m[0m protocol          = "HTTPS"
+      [32m+[0m[0m ssl_policy        = "ELBSecurityPolicy-2016-08"
+      [32m+[0m[0m tags_all          = (known after apply)
+
+      [32m+[0m[0m default_action {
+          [32m+[0m[0m order            = (known after apply)
+          [32m+[0m[0m target_group_arn = (known after apply)
+          [32m+[0m[0m type             = "forward"
+        }
+    }
+
+[1m  # module.alb["public_alb"].aws_lb_target_group.tg[0m will be created
+[0m  [32m+[0m[0m resource "aws_lb_target_group" "tg" {
+      [32m+[0m[0m arn                                = (known after apply)
+      [32m+[0m[0m arn_suffix                         = (known after apply)
+      [32m+[0m[0m connection_termination             = (known after apply)
+      [32m+[0m[0m deregistration_delay               = "300"
+      [32m+[0m[0m id                                 = (known after apply)
+      [32m+[0m[0m ip_address_type                    = (known after apply)
+      [32m+[0m[0m lambda_multi_value_headers_enabled = false
+      [32m+[0m[0m load_balancer_arns                 = (known after apply)
+      [32m+[0m[0m load_balancing_algorithm_type      = (known after apply)
+      [32m+[0m[0m load_balancing_anomaly_mitigation  = (known after apply)
+      [32m+[0m[0m load_balancing_cross_zone_enabled  = (known after apply)
+      [32m+[0m[0m name                               = "dev-public-tg"
+      [32m+[0m[0m name_prefix                        = (known after apply)
+      [32m+[0m[0m port                               = 80
+      [32m+[0m[0m preserve_client_ip                 = (known after apply)
+      [32m+[0m[0m protocol                           = "HTTP"
+      [32m+[0m[0m protocol_version                   = (known after apply)
+      [32m+[0m[0m proxy_protocol_v2                  = false
+      [32m+[0m[0m slow_start                         = 0
+      [32m+[0m[0m tags                               = {
+          [32m+[0m[0m "Name" = "DEV-tg"
+        }
+      [32m+[0m[0m tags_all                           = {
+          [32m+[0m[0m "Name" = "DEV-tg"
+        }
+      [32m+[0m[0m target_type                        = "instance"
+      [32m+[0m[0m vpc_id                             = (known after apply)
+
+      [32m+[0m[0m health_check {
+          [32m+[0m[0m enabled             = true
+          [32m+[0m[0m healthy_threshold   = 2
+          [32m+[0m[0m interval            = 30
+          [32m+[0m[0m matcher             = "200-299"
+          [32m+[0m[0m path                = "/health"
+          [32m+[0m[0m port                = "traffic-port"
+          [32m+[0m[0m protocol            = "HTTP"
+          [32m+[0m[0m timeout             = 5
+          [32m+[0m[0m unhealthy_threshold = 2
+        }
+    }
+
+[1m  # module.alb["public_alb"].aws_lb_target_group_attachment.tg_attachment[0m will be created
+[0m  [32m+[0m[0m resource "aws_lb_target_group_attachment" "tg_attachment" {
+      [32m+[0m[0m id               = (known after apply)
+      [32m+[0m[0m port             = 80
+      [32m+[0m[0m target_group_arn = (known after apply)
+      [32m+[0m[0m target_id        = "i-0123456789abcdef0"
+    }
+
+[1m  # module.ecs.aws_autoscaling_group.ecs[0m will be created
+[0m  [32m+[0m[0m resource "aws_autoscaling_group" "ecs" {
+      [32m+[0m[0m arn                              = (known after apply)
+      [32m+[0m[0m availability_zones               = (known after apply)
+      [32m+[0m[0m default_cooldown                 = (known after apply)
+      [32m+[0m[0m desired_capacity                 = 2
+      [32m+[0m[0m force_delete                     = false
+      [32m+[0m[0m force_delete_warm_pool           = false
+      [32m+[0m[0m health_check_grace_period        = 300
+      [32m+[0m[0m health_check_type                = (known after apply)
+      [32m+[0m[0m id                               = (known after apply)
+      [32m+[0m[0m ignore_failed_scaling_activities = false
+      [32m+[0m[0m load_balancers                   = (known after apply)
+      [32m+[0m[0m max_size                         = 4
+      [32m+[0m[0m metrics_granularity              = "1Minute"
+      [32m+[0m[0m min_size                         = 1
+      [32m+[0m[0m name                             = (known after apply)
+      [32m+[0m[0m name_prefix                      = (known after apply)
+      [32m+[0m[0m predicted_capacity               = (known after apply)
+      [32m+[0m[0m protect_from_scale_in            = false
+      [32m+[0m[0m service_linked_role_arn          = (known after apply)
+      [32m+[0m[0m target_group_arns                = (known after apply)
+      [32m+[0m[0m vpc_zone_identifier              = (known after apply)
+      [32m+[0m[0m wait_for_capacity_timeout        = "10m"
+      [32m+[0m[0m warm_pool_size                   = (known after apply)
+
+      [32m+[0m[0m launch_template {
+          [32m+[0m[0m id      = (known after apply)
+          [32m+[0m[0m name    = (known after apply)
+          [32m+[0m[0m version = "$Latest"
+        }
+
+      [32m+[0m[0m tag {
+          [32m+[0m[0m key                 = "Name"
+          [32m+[0m[0m propagate_at_launch = true
+          [32m+[0m[0m value               = "ecs-instance"
+        }
+    }
+
+[1m  # module.ecs.aws_ecs_cluster.this["main"][0m will be created
+[0m  [32m+[0m[0m resource "aws_ecs_cluster" "this" {
+      [32m+[0m[0m arn      = (known after apply)
+      [32m+[0m[0m id       = (known after apply)
+      [32m+[0m[0m name     = "dev-ecs-cluster"
+      [32m+[0m[0m tags_all = (known after apply)
+    }
+
+[1m  # module.ecs.aws_ecs_service.this["api_service"][0m will be created
+[0m  [32m+[0m[0m resource "aws_ecs_service" "this" {
+      [32m+[0m[0m cluster                            = (known after apply)
+      [32m+[0m[0m deployment_maximum_percent         = 200
+      [32m+[0m[0m deployment_minimum_healthy_percent = 100
+      [32m+[0m[0m desired_count                      = 2
+      [32m+[0m[0m enable_ecs_managed_tags            = false
+      [32m+[0m[0m enable_execute_command             = false
+      [32m+[0m[0m iam_role                           = (known after apply)
+      [32m+[0m[0m id                                 = (known after apply)
+      [32m+[0m[0m launch_type                        = "EC2"
+      [32m+[0m[0m name                               = "api-service"
+      [32m+[0m[0m platform_version                   = (known after apply)
+      [32m+[0m[0m scheduling_strategy                = "REPLICA"
+      [32m+[0m[0m tags_all                           = (known after apply)
+      [32m+[0m[0m task_definition                    = (known after apply)
+      [32m+[0m[0m triggers                           = (known after apply)
+      [32m+[0m[0m wait_for_steady_state              = false
+
+      [32m+[0m[0m load_balancer {
+          [32m+[0m[0m container_name   = "api-server"
+          [32m+[0m[0m container_port   = 80
+          [32m+[0m[0m target_group_arn = "arn:aws:elasticloadbalancing:ap-northeast-2:123456789012:targetgroup/dev-public-tg"
+        }
+
+      [32m+[0m[0m network_configuration {
+          [32m+[0m[0m assign_public_ip = false
+          [32m+[0m[0m security_groups  = (known after apply)
+          [32m+[0m[0m subnets          = (known after apply)
+        }
+    }
+
+[1m  # module.ecs.aws_ecs_task_definition.this["api_server"][0m will be created
+[0m  [32m+[0m[0m resource "aws_ecs_task_definition" "this" {
+      [32m+[0m[0m arn                      = (known after apply)
+      [32m+[0m[0m arn_without_revision     = (known after apply)
+      [32m+[0m[0m container_definitions    = jsonencode(
+            [
+              [32m+[0m[0m {
+                  [32m+[0m[0m cpu              = 256
+                  [32m+[0m[0m environment      = [
+                      [32m+[0m[0m {
+                          [32m+[0m[0m name  = "ENV"
+                          [32m+[0m[0m value = "DEV"
+                        },
+                    ]
+                  [32m+[0m[0m essential        = true
+                  [32m+[0m[0m image            = "nginx:latest"
+                  [32m+[0m[0m logConfiguration = {
+                      [32m+[0m[0m logDriver = "awslogs"
+                      [32m+[0m[0m options   = {
+                          [32m+[0m[0m awslogs-group         = "/ecs/api-server"
+                          [32m+[0m[0m awslogs-region        = "ap-northeast-2"
+                          [32m+[0m[0m awslogs-stream-prefix = "api"
+                        }
+                    }
+                  [32m+[0m[0m memory           = 512
+                  [32m+[0m[0m name             = "api-server"
+                  [32m+[0m[0m portMappings     = []
+                },
+            ]
+        )
+      [32m+[0m[0m cpu                      = "512"
+      [32m+[0m[0m execution_role_arn       = (known after apply)
+      [32m+[0m[0m family                   = "dev-api-server"
+      [32m+[0m[0m id                       = (known after apply)
+      [32m+[0m[0m memory                   = "1024"
+      [32m+[0m[0m network_mode             = "bridge"
+      [32m+[0m[0m requires_compatibilities = [
+          [32m+[0m[0m "EC2",
+        ]
+      [32m+[0m[0m revision                 = (known after apply)
+      [32m+[0m[0m skip_destroy             = false
+      [32m+[0m[0m tags_all                 = (known after apply)
+      [32m+[0m[0m task_role_arn            = (known after apply)
+      [32m+[0m[0m track_latest             = false
+    }
+
+[1m  # module.ecs.aws_launch_template.ecs[0m will be created
+[0m  [32m+[0m[0m resource "aws_launch_template" "ecs" {
+      [32m+[0m[0m arn                    = (known after apply)
+      [32m+[0m[0m default_version        = (known after apply)
+      [32m+[0m[0m id                     = (known after apply)
+      [32m+[0m[0m image_id               = "amzn2-ami-ecs-hvm-2.0.20211202-x86_64-ebs"
+      [32m+[0m[0m instance_type          = "t3.micro"
+      [32m+[0m[0m latest_version         = (known after apply)
+      [32m+[0m[0m name                   = (known after apply)
+      [32m+[0m[0m name_prefix            = "ecs-launch-template-"
+      [32m+[0m[0m tags_all               = (known after apply)
+      [32m+[0m[0m user_data              = "ICAjIS9iaW4vYmFzaAogIGVjaG8gRUNTX0NMVVNURVI9ZGV2LWVjcy1jbHVzdGVyID4+IC9ldGMvZWNzL2Vjcy5jb25maWcK"
+      [32m+[0m[0m vpc_security_group_ids = (known after apply)
+
+      [32m+[0m[0m iam_instance_profile {
+          [32m+[0m[0m name = "ecs-instance-profile"
+        }
+
+      [32m+[0m[0m tag_specifications {
+          [32m+[0m[0m resource_type = "instance"
+          [32m+[0m[0m tags          = {
+              [32m+[0m[0m "Name" = "ecs-instance"
+            }
+        }
+    }
+
+[1m  # module.rds.aws_db_instance.rds[0m will be created
+[0m  [32m+[0m[0m resource "aws_db_instance" "rds" {
+      [32m+[0m[0m address                               = (known after apply)
+      [32m+[0m[0m allocated_storage                     = 20
+      [32m+[0m[0m apply_immediately                     = false
+      [32m+[0m[0m arn                                   = (known after apply)
+      [32m+[0m[0m auto_minor_version_upgrade            = true
+      [32m+[0m[0m availability_zone                     = (known after apply)
+      [32m+[0m[0m backup_retention_period               = (known after apply)
+      [32m+[0m[0m backup_target                         = (known after apply)
+      [32m+[0m[0m backup_window                         = (known after apply)
+      [32m+[0m[0m ca_cert_identifier                    = (known after apply)
+      [32m+[0m[0m character_set_name                    = (known after apply)
+      [32m+[0m[0m copy_tags_to_snapshot                 = false
+      [32m+[0m[0m db_name                               = "mydatabase"
+      [32m+[0m[0m db_subnet_group_name                  = "dev-db-subnet-group"
+      [32m+[0m[0m dedicated_log_volume                  = false
+      [32m+[0m[0m delete_automated_backups              = true
+      [32m+[0m[0m domain_fqdn                           = (known after apply)
+      [32m+[0m[0m endpoint                              = (known after apply)
+      [32m+[0m[0m engine                                = "mysql"
+      [32m+[0m[0m engine_lifecycle_support              = (known after apply)
+      [32m+[0m[0m engine_version                        = "8.0"
+      [32m+[0m[0m engine_version_actual                 = (known after apply)
+      [32m+[0m[0m hosted_zone_id                        = (known after apply)
+      [32m+[0m[0m id                                    = (known after apply)
+      [32m+[0m[0m identifier                            = "rds-dev-mydatabase"
+      [32m+[0m[0m identifier_prefix                     = (known after apply)
+      [32m+[0m[0m instance_class                        = "db.t3.medium"
+      [32m+[0m[0m iops                                  = (known after apply)
+      [32m+[0m[0m kms_key_id                            = (known after apply)
+      [32m+[0m[0m latest_restorable_time                = (known after apply)
+      [32m+[0m[0m license_model                         = (known after apply)
+      [32m+[0m[0m listener_endpoint                     = (known after apply)
+      [32m+[0m[0m maintenance_window                    = (known after apply)
+      [32m+[0m[0m master_user_secret                    = (known after apply)
+      [32m+[0m[0m master_user_secret_kms_key_id         = (known after apply)
+      [32m+[0m[0m monitoring_interval                   = 0
+      [32m+[0m[0m monitoring_role_arn                   = (known after apply)
+      [32m+[0m[0m multi_az                              = false
+      [32m+[0m[0m nchar_character_set_name              = (known after apply)
+      [32m+[0m[0m network_type                          = (known after apply)
+      [32m+[0m[0m option_group_name                     = (known after apply)
+      [32m+[0m[0m parameter_group_name                  = "default.mysql8.0"
+      [32m+[0m[0m password                              = (sensitive value)
+      [32m+[0m[0m performance_insights_enabled          = false
+      [32m+[0m[0m performance_insights_kms_key_id       = (known after apply)
+      [32m+[0m[0m performance_insights_retention_period = (known after apply)
+      [32m+[0m[0m port                                  = (known after apply)
+      [32m+[0m[0m publicly_accessible                   = false
+      [32m+[0m[0m replica_mode                          = (known after apply)
+      [32m+[0m[0m replicas                              = (known after apply)
+      [32m+[0m[0m resource_id                           = (known after apply)
+      [32m+[0m[0m skip_final_snapshot                   = true
+      [32m+[0m[0m snapshot_identifier                   = (known after apply)
+      [32m+[0m[0m status                                = (known after apply)
+      [32m+[0m[0m storage_throughput                    = (known after apply)
+      [32m+[0m[0m storage_type                          = "gp2"
+      [32m+[0m[0m tags                                  = {
+          [32m+[0m[0m "Environment" = "dev"
+          [32m+[0m[0m "Name"        = "mydatabase"
+        }
+      [32m+[0m[0m tags_all                              = {
+          [32m+[0m[0m "Environment" = "dev"
+          [32m+[0m[0m "Name"        = "mydatabase"
+        }
+      [32m+[0m[0m timezone                              = (known after apply)
+      [32m+[0m[0m username                              = "admin"
+      [32m+[0m[0m vpc_security_group_ids                = (known after apply)
+    }
+
+[1m  # module.rds.aws_db_subnet_group.db_subnet_group[0m will be created
+[0m  [32m+[0m[0m resource "aws_db_subnet_group" "db_subnet_group" {
+      [32m+[0m[0m arn                     = (known after apply)
+      [32m+[0m[0m description             = "Managed by Terraform"
+      [32m+[0m[0m id                      = (known after apply)
+      [32m+[0m[0m name                    = "dev-db-subnet-group"
+      [32m+[0m[0m name_prefix             = (known after apply)
+      [32m+[0m[0m subnet_ids              = (known after apply)
+      [32m+[0m[0m supported_network_types = (known after apply)
+      [32m+[0m[0m tags                    = {
+          [32m+[0m[0m "Environment" = "dev"
+          [32m+[0m[0m "Name"        = "dev-db-subnet-group"
+        }
+      [32m+[0m[0m tags_all                = {
+          [32m+[0m[0m "Environment" = "dev"
+          [32m+[0m[0m "Name"        = "dev-db-subnet-group"
+        }
+      [32m+[0m[0m vpc_id                  = (known after apply)
+    }
+
+[1m  # module.sg.aws_security_group.sg["alb_sg"][0m will be created
+[0m  [32m+[0m[0m resource "aws_security_group" "sg" {
+      [32m+[0m[0m arn                    = (known after apply)
+      [32m+[0m[0m description            = "Security group for ALB"
+      [32m+[0m[0m egress                 = (known after apply)
+      [32m+[0m[0m id                     = (known after apply)
+      [32m+[0m[0m ingress                = (known after apply)
+      [32m+[0m[0m name                   = "alb-sg"
+      [32m+[0m[0m name_prefix            = (known after apply)
+      [32m+[0m[0m owner_id               = (known after apply)
+      [32m+[0m[0m revoke_rules_on_delete = false
+      [32m+[0m[0m tags                   = {
+          [32m+[0m[0m "Name" = "alb-sg"
+        }
+      [32m+[0m[0m tags_all               = {
+          [32m+[0m[0m "Name" = "alb-sg"
+        }
+      [32m+[0m[0m vpc_id                 = (known after apply)
+    }
+
+[1m  # module.sg.aws_security_group.sg["ecs_instance_sg"][0m will be created
+[0m  [32m+[0m[0m resource "aws_security_group" "sg" {
+      [32m+[0m[0m arn                    = (known after apply)
+      [32m+[0m[0m description            = "Security group for ECS Instances"
+      [32m+[0m[0m egress                 = (known after apply)
+      [32m+[0m[0m id                     = (known after apply)
+      [32m+[0m[0m ingress                = (known after apply)
+      [32m+[0m[0m name                   = "ecs-instance-sg"
+      [32m+[0m[0m name_prefix            = (known after apply)
+      [32m+[0m[0m owner_id               = (known after apply)
+      [32m+[0m[0m revoke_rules_on_delete = false
+      [32m+[0m[0m tags                   = {
+          [32m+[0m[0m "Name" = "ecs-instance-sg"
+        }
+      [32m+[0m[0m tags_all               = {
+          [32m+[0m[0m "Name" = "ecs-instance-sg"
+        }
+      [32m+[0m[0m vpc_id                 = (known after apply)
+    }
+
+[1m  # module.sg.aws_security_group.sg["ecs_sg"][0m will be created
+[0m  [32m+[0m[0m resource "aws_security_group" "sg" {
+      [32m+[0m[0m arn                    = (known after apply)
+      [32m+[0m[0m description            = "Security group for ECS"
+      [32m+[0m[0m egress                 = (known after apply)
+      [32m+[0m[0m id                     = (known after apply)
+      [32m+[0m[0m ingress                = (known after apply)
+      [32m+[0m[0m name                   = "ecs-sg"
+      [32m+[0m[0m name_prefix            = (known after apply)
+      [32m+[0m[0m owner_id               = (known after apply)
+      [32m+[0m[0m revoke_rules_on_delete = false
+      [32m+[0m[0m tags                   = {
+          [32m+[0m[0m "Name" = "ecs-sg"
+        }
+      [32m+[0m[0m tags_all               = {
+          [32m+[0m[0m "Name" = "ecs-sg"
+        }
+      [32m+[0m[0m vpc_id                 = (known after apply)
+    }
+
+[1m  # module.sg.aws_security_group.sg["rds_sg"][0m will be created
+[0m  [32m+[0m[0m resource "aws_security_group" "sg" {
+      [32m+[0m[0m arn                    = (known after apply)
+      [32m+[0m[0m description            = "Security group for RDS"
+      [32m+[0m[0m egress                 = (known after apply)
+      [32m+[0m[0m id                     = (known after apply)
+      [32m+[0m[0m ingress                = (known after apply)
+      [32m+[0m[0m name                   = "rds-sg"
+      [32m+[0m[0m name_prefix            = (known after apply)
+      [32m+[0m[0m owner_id               = (known after apply)
+      [32m+[0m[0m revoke_rules_on_delete = false
+      [32m+[0m[0m tags                   = {
+          [32m+[0m[0m "Name" = "rds-sg"
+        }
+      [32m+[0m[0m tags_all               = {
+          [32m+[0m[0m "Name" = "rds-sg"
+        }
+      [32m+[0m[0m vpc_id                 = (known after apply)
+    }
+
+[1m  # module.sg.aws_security_group_rule.egress["alb_egress_all"][0m will be created
+[0m  [32m+[0m[0m resource "aws_security_group_rule" "egress" {
+      [32m+[0m[0m cidr_blocks              = [
+          [32m+[0m[0m "0.0.0.0/0",
+        ]
+      [32m+[0m[0m description              = "Allow all egress from ALB"
+      [32m+[0m[0m from_port                = 0
+      [32m+[0m[0m id                       = (known after apply)
+      [32m+[0m[0m protocol                 = "-1"
+      [32m+[0m[0m security_group_id        = (known after apply)
+      [32m+[0m[0m security_group_rule_id   = (known after apply)
+      [32m+[0m[0m self                     = false
+      [32m+[0m[0m source_security_group_id = (known after apply)
+      [32m+[0m[0m to_port                  = 0
+      [32m+[0m[0m type                     = "egress"
+    }
+
+[1m  # module.sg.aws_security_group_rule.egress["ecs_egress_all"][0m will be created
+[0m  [32m+[0m[0m resource "aws_security_group_rule" "egress" {
+      [32m+[0m[0m cidr_blocks              = [
+          [32m+[0m[0m "0.0.0.0/0",
+        ]
+      [32m+[0m[0m description              = "Allow all egress from ECS Instance"
+      [32m+[0m[0m from_port                = 0
+      [32m+[0m[0m id                       = (known after apply)
+      [32m+[0m[0m protocol                 = "-1"
+      [32m+[0m[0m security_group_id        = (known after apply)
+      [32m+[0m[0m security_group_rule_id   = (known after apply)
+      [32m+[0m[0m self                     = false
+      [32m+[0m[0m source_security_group_id = (known after apply)
+      [32m+[0m[0m to_port                  = 0
+      [32m+[0m[0m type                     = "egress"
+    }
+
+[1m  # module.sg.aws_security_group_rule.egress["ecs_service_egress_all"][0m will be created
+[0m  [32m+[0m[0m resource "aws_security_group_rule" "egress" {
+      [32m+[0m[0m cidr_blocks              = [
+          [32m+[0m[0m "0.0.0.0/0",
+        ]
+      [32m+[0m[0m description              = "Allow all egress from ECS Service"
+      [32m+[0m[0m from_port                = 0
+      [32m+[0m[0m id                       = (known after apply)
+      [32m+[0m[0m protocol                 = "-1"
+      [32m+[0m[0m security_group_id        = (known after apply)
+      [32m+[0m[0m security_group_rule_id   = (known after apply)
+      [32m+[0m[0m self                     = false
+      [32m+[0m[0m source_security_group_id = (known after apply)
+      [32m+[0m[0m to_port                  = 0
+      [32m+[0m[0m type                     = "egress"
+    }
+
+[1m  # module.sg.aws_security_group_rule.egress["rds_egress_all"][0m will be created
+[0m  [32m+[0m[0m resource "aws_security_group_rule" "egress" {
+      [32m+[0m[0m cidr_blocks              = [
+          [32m+[0m[0m "0.0.0.0/0",
+        ]
+      [32m+[0m[0m description              = "Allow all egress from RDS"
+      [32m+[0m[0m from_port                = 0
+      [32m+[0m[0m id                       = (known after apply)
+      [32m+[0m[0m protocol                 = "-1"
+      [32m+[0m[0m security_group_id        = (known after apply)
+      [32m+[0m[0m security_group_rule_id   = (known after apply)
+      [32m+[0m[0m self                     = false
+      [32m+[0m[0m source_security_group_id = (known after apply)
+      [32m+[0m[0m to_port                  = 0
+      [32m+[0m[0m type                     = "egress"
+    }
+
+[1m  # module.sg.aws_security_group_rule.ingress_cidr["alb_ingress_http_cidr"][0m will be created
+[0m  [32m+[0m[0m resource "aws_security_group_rule" "ingress_cidr" {
+      [32m+[0m[0m cidr_blocks              = [
+          [32m+[0m[0m "59.5.15.55/32",
+          [32m+[0m[0m "10.212.134.0/24",
+        ]
+      [32m+[0m[0m description              = "HTTP access to ALB"
+      [32m+[0m[0m from_port                = 80
+      [32m+[0m[0m id                       = (known after apply)
+      [32m+[0m[0m protocol                 = "tcp"
+      [32m+[0m[0m security_group_id        = (known after apply)
+      [32m+[0m[0m security_group_rule_id   = (known after apply)
+      [32m+[0m[0m self                     = false
+      [32m+[0m[0m source_security_group_id = (known after apply)
+      [32m+[0m[0m to_port                  = 80
+      [32m+[0m[0m type                     = "ingress"
+    }
+
+[1m  # module.sg.aws_security_group_rule.ingress_cidr["alb_ingress_https_cidr"][0m will be created
+[0m  [32m+[0m[0m resource "aws_security_group_rule" "ingress_cidr" {
+      [32m+[0m[0m cidr_blocks              = [
+          [32m+[0m[0m "59.5.15.55/32",
+          [32m+[0m[0m "10.212.134.0/24",
+        ]
+      [32m+[0m[0m description              = "HTTPS access to ALB"
+      [32m+[0m[0m from_port                = 443
+      [32m+[0m[0m id                       = (known after apply)
+      [32m+[0m[0m protocol                 = "tcp"
+      [32m+[0m[0m security_group_id        = (known after apply)
+      [32m+[0m[0m security_group_rule_id   = (known after apply)
+      [32m+[0m[0m self                     = false
+      [32m+[0m[0m source_security_group_id = (known after apply)
+      [32m+[0m[0m to_port                  = 443
+      [32m+[0m[0m type                     = "ingress"
+    }
+
+[1m  # module.sg.aws_security_group_rule.ingress_self["ecs_instance_ingress_ssh_self"][0m will be created
+[0m  [32m+[0m[0m resource "aws_security_group_rule" "ingress_self" {
+      [32m+[0m[0m description              = "SSH access to ECS Instance"
+      [32m+[0m[0m from_port                = 22
+      [32m+[0m[0m id                       = (known after apply)
+      [32m+[0m[0m protocol                 = "tcp"
+      [32m+[0m[0m security_group_id        = (known after apply)
+      [32m+[0m[0m security_group_rule_id   = (known after apply)
+      [32m+[0m[0m self                     = true
+      [32m+[0m[0m source_security_group_id = (known after apply)
+      [32m+[0m[0m to_port                  = 22
+      [32m+[0m[0m type                     = "ingress"
+    }
+
+[1m  # module.sg.aws_security_group_rule.ingress_self["ecs_service_ingress_http_self"][0m will be created
+[0m  [32m+[0m[0m resource "aws_security_group_rule" "ingress_self" {
+      [32m+[0m[0m description              = "HTTP access from ALB to ECS Service"
+      [32m+[0m[0m from_port                = 80
+      [32m+[0m[0m id                       = (known after apply)
+      [32m+[0m[0m protocol                 = "tcp"
+      [32m+[0m[0m security_group_id        = (known after apply)
+      [32m+[0m[0m security_group_rule_id   = (known after apply)
+      [32m+[0m[0m self                     = true
+      [32m+[0m[0m source_security_group_id = (known after apply)
+      [32m+[0m[0m to_port                  = 80
+      [32m+[0m[0m type                     = "ingress"
+    }
+
+[1m  # module.sg.aws_security_group_rule.ingress_self["ecs_service_ingress_https_self"][0m will be created
+[0m  [32m+[0m[0m resource "aws_security_group_rule" "ingress_self" {
+      [32m+[0m[0m description              = "HTTPS access from ALB to ECS Service"
+      [32m+[0m[0m from_port                = 443
+      [32m+[0m[0m id                       = (known after apply)
+      [32m+[0m[0m protocol                 = "tcp"
+      [32m+[0m[0m security_group_id        = (known after apply)
+      [32m+[0m[0m security_group_rule_id   = (known after apply)
+      [32m+[0m[0m self                     = true
+      [32m+[0m[0m source_security_group_id = (known after apply)
+      [32m+[0m[0m to_port                  = 443
+      [32m+[0m[0m type                     = "ingress"
+    }
+
+[1m  # module.sg.aws_security_group_rule.ingress_self["rds_ingress_ecs_self"][0m will be created
+[0m  [32m+[0m[0m resource "aws_security_group_rule" "ingress_self" {
+      [32m+[0m[0m description              = "Access from ECS to RDS"
+      [32m+[0m[0m from_port                = 1433
+      [32m+[0m[0m id                       = (known after apply)
+      [32m+[0m[0m protocol                 = "tcp"
+      [32m+[0m[0m security_group_id        = (known after apply)
+      [32m+[0m[0m security_group_rule_id   = (known after apply)
+      [32m+[0m[0m self                     = true
+      [32m+[0m[0m source_security_group_id = (known after apply)
+      [32m+[0m[0m to_port                  = 1433
+      [32m+[0m[0m type                     = "ingress"
+    }
+
+[1m  # module.vpc.aws_eip.nat_eip[0m will be created
+[0m  [32m+[0m[0m resource "aws_eip" "nat_eip" {
+      [32m+[0m[0m allocation_id        = (known after apply)
+      [32m+[0m[0m arn                  = (known after apply)
+      [32m+[0m[0m association_id       = (known after apply)
+      [32m+[0m[0m carrier_ip           = (known after apply)
+      [32m+[0m[0m customer_owned_ip    = (known after apply)
+      [32m+[0m[0m domain               = (known after apply)
+      [32m+[0m[0m id                   = (known after apply)
+      [32m+[0m[0m instance             = (known after apply)
+      [32m+[0m[0m network_border_group = (known after apply)
+      [32m+[0m[0m network_interface    = (known after apply)
+      [32m+[0m[0m private_dns          = (known after apply)
+      [32m+[0m[0m private_ip           = (known after apply)
+      [32m+[0m[0m ptr_record           = (known after apply)
+      [32m+[0m[0m public_dns           = (known after apply)
+      [32m+[0m[0m public_ip            = (known after apply)
+      [32m+[0m[0m public_ipv4_pool     = (known after apply)
+      [32m+[0m[0m tags                 = {
+          [32m+[0m[0m "Name" = "DEV-NAT-EIP"
+        }
+      [32m+[0m[0m tags_all             = {
+          [32m+[0m[0m "Name" = "DEV-NAT-EIP"
+        }
+      [32m+[0m[0m vpc                  = (known after apply)
+    }
+
+[1m  # module.vpc.aws_internet_gateway.igw[0m will be created
+[0m  [32m+[0m[0m resource "aws_internet_gateway" "igw" {
+      [32m+[0m[0m arn      = (known after apply)
+      [32m+[0m[0m id       = (known after apply)
+      [32m+[0m[0m owner_id = (known after apply)
+      [32m+[0m[0m tags     = {
+          [32m+[0m[0m "Name" = "DEV-IGW"
+        }
+      [32m+[0m[0m tags_all = {
+          [32m+[0m[0m "Name" = "DEV-IGW"
+        }
+      [32m+[0m[0m vpc_id   = (known after apply)
+    }
+
+[1m  # module.vpc.aws_nat_gateway.nat[0m will be created
+[0m  [32m+[0m[0m resource "aws_nat_gateway" "nat" {
+      [32m+[0m[0m allocation_id                      = (known after apply)
+      [32m+[0m[0m association_id                     = (known after apply)
+      [32m+[0m[0m connectivity_type                  = "public"
+      [32m+[0m[0m id                                 = (known after apply)
+      [32m+[0m[0m network_interface_id               = (known after apply)
+      [32m+[0m[0m private_ip                         = (known after apply)
+      [32m+[0m[0m public_ip                          = (known after apply)
+      [32m+[0m[0m secondary_private_ip_address_count = (known after apply)
+      [32m+[0m[0m secondary_private_ip_addresses     = (known after apply)
+      [32m+[0m[0m subnet_id                          = (known after apply)
+      [32m+[0m[0m tags                               = {
+          [32m+[0m[0m "Name" = "DEV-NAT-Gateway"
+        }
+      [32m+[0m[0m tags_all                           = {
+          [32m+[0m[0m "Name" = "DEV-NAT-Gateway"
+        }
+    }
+
+[1m  # module.vpc.aws_route_table.private[0m will be created
+[0m  [32m+[0m[0m resource "aws_route_table" "private" {
+      [32m+[0m[0m arn              = (known after apply)
+      [32m+[0m[0m id               = (known after apply)
+      [32m+[0m[0m owner_id         = (known after apply)
+      [32m+[0m[0m propagating_vgws = (known after apply)
+      [32m+[0m[0m route            = [
+          [32m+[0m[0m {
+              [32m+[0m[0m carrier_gateway_id         = ""
+              [32m+[0m[0m cidr_block                 = "0.0.0.0/0"
+              [32m+[0m[0m core_network_arn           = ""
+              [32m+[0m[0m destination_prefix_list_id = ""
+              [32m+[0m[0m egress_only_gateway_id     = ""
+              [32m+[0m[0m gateway_id                 = ""
+              [32m+[0m[0m ipv6_cidr_block            = ""
+              [32m+[0m[0m local_gateway_id           = ""
+              [32m+[0m[0m nat_gateway_id             = (known after apply)
+              [32m+[0m[0m network_interface_id       = ""
+              [32m+[0m[0m transit_gateway_id         = ""
+              [32m+[0m[0m vpc_endpoint_id            = ""
+              [32m+[0m[0m vpc_peering_connection_id  = ""
+            },
+        ]
+      [32m+[0m[0m tags             = {
+          [32m+[0m[0m "Name" = "DEV-Private-RT"
+        }
+      [32m+[0m[0m tags_all         = {
+          [32m+[0m[0m "Name" = "DEV-Private-RT"
+        }
+      [32m+[0m[0m vpc_id           = (known after apply)
+    }
+
+[1m  # module.vpc.aws_route_table.public[0m will be created
+[0m  [32m+[0m[0m resource "aws_route_table" "public" {
+      [32m+[0m[0m arn              = (known after apply)
+      [32m+[0m[0m id               = (known after apply)
+      [32m+[0m[0m owner_id         = (known after apply)
+      [32m+[0m[0m propagating_vgws = (known after apply)
+      [32m+[0m[0m route            = [
+          [32m+[0m[0m {
+              [32m+[0m[0m carrier_gateway_id         = ""
+              [32m+[0m[0m cidr_block                 = "0.0.0.0/0"
+              [32m+[0m[0m core_network_arn           = ""
+              [32m+[0m[0m destination_prefix_list_id = ""
+              [32m+[0m[0m egress_only_gateway_id     = ""
+              [32m+[0m[0m gateway_id                 = (known after apply)
+              [32m+[0m[0m ipv6_cidr_block            = ""
+              [32m+[0m[0m local_gateway_id           = ""
+              [32m+[0m[0m nat_gateway_id             = ""
+              [32m+[0m[0m network_interface_id       = ""
+              [32m+[0m[0m transit_gateway_id         = ""
+              [32m+[0m[0m vpc_endpoint_id            = ""
+              [32m+[0m[0m vpc_peering_connection_id  = ""
+            },
+        ]
+      [32m+[0m[0m tags             = {
+          [32m+[0m[0m "Name" = "DEV-Public-RT"
+        }
+      [32m+[0m[0m tags_all         = {
+          [32m+[0m[0m "Name" = "DEV-Public-RT"
+        }
+      [32m+[0m[0m vpc_id           = (known after apply)
+    }
+
+[1m  # module.vpc.aws_route_table_association.private_assoc["0"][0m will be created
+[0m  [32m+[0m[0m resource "aws_route_table_association" "private_assoc" {
+      [32m+[0m[0m id             = (known after apply)
+      [32m+[0m[0m route_table_id = (known after apply)
+      [32m+[0m[0m subnet_id      = (known after apply)
+    }
+
+[1m  # module.vpc.aws_route_table_association.private_assoc["1"][0m will be created
+[0m  [32m+[0m[0m resource "aws_route_table_association" "private_assoc" {
+      [32m+[0m[0m id             = (known after apply)
+      [32m+[0m[0m route_table_id = (known after apply)
+      [32m+[0m[0m subnet_id      = (known after apply)
+    }
+
+[1m  # module.vpc.aws_route_table_association.public_assoc["0"][0m will be created
+[0m  [32m+[0m[0m resource "aws_route_table_association" "public_assoc" {
+      [32m+[0m[0m id             = (known after apply)
+      [32m+[0m[0m route_table_id = (known after apply)
+      [32m+[0m[0m subnet_id      = (known after apply)
+    }
+
+[1m  # module.vpc.aws_route_table_association.public_assoc["1"][0m will be created
+[0m  [32m+[0m[0m resource "aws_route_table_association" "public_assoc" {
+      [32m+[0m[0m id             = (known after apply)
+      [32m+[0m[0m route_table_id = (known after apply)
+      [32m+[0m[0m subnet_id      = (known after apply)
+    }
+
+[1m  # module.vpc.aws_subnet.db["0"][0m will be created
+[0m  [32m+[0m[0m resource "aws_subnet" "db" {
+      [32m+[0m[0m arn                                            = (known after apply)
+      [32m+[0m[0m assign_ipv6_address_on_creation                = false
+      [32m+[0m[0m availability_zone                              = "ap-northeast-2a"
+      [32m+[0m[0m availability_zone_id                           = (known after apply)
+      [32m+[0m[0m cidr_block                                     = "10.0.5.0/24"
+      [32m+[0m[0m enable_dns64                                   = false
+      [32m+[0m[0m enable_resource_name_dns_a_record_on_launch    = false
+      [32m+[0m[0m enable_resource_name_dns_aaaa_record_on_launch = false
+      [32m+[0m[0m id                                             = (known after apply)
+      [32m+[0m[0m ipv6_cidr_block_association_id                 = (known after apply)
+      [32m+[0m[0m ipv6_native                                    = false
+      [32m+[0m[0m map_public_ip_on_launch                        = false
+      [32m+[0m[0m owner_id                                       = (known after apply)
+      [32m+[0m[0m private_dns_hostname_type_on_launch            = (known after apply)
+      [32m+[0m[0m tags                                           = {
+          [32m+[0m[0m "Name" = "DEV-DB-Subnet-0"
+        }
+      [32m+[0m[0m tags_all                                       = {
+          [32m+[0m[0m "Name" = "DEV-DB-Subnet-0"
+        }
+      [32m+[0m[0m vpc_id                                         = (known after apply)
+    }
+
+[1m  # module.vpc.aws_subnet.db["1"][0m will be created
+[0m  [32m+[0m[0m resource "aws_subnet" "db" {
+      [32m+[0m[0m arn                                            = (known after apply)
+      [32m+[0m[0m assign_ipv6_address_on_creation                = false
+      [32m+[0m[0m availability_zone                              = "ap-northeast-2c"
+      [32m+[0m[0m availability_zone_id                           = (known after apply)
+      [32m+[0m[0m cidr_block                                     = "10.0.6.0/24"
+      [32m+[0m[0m enable_dns64                                   = false
+      [32m+[0m[0m enable_resource_name_dns_a_record_on_launch    = false
+      [32m+[0m[0m enable_resource_name_dns_aaaa_record_on_launch = false
+      [32m+[0m[0m id                                             = (known after apply)
+      [32m+[0m[0m ipv6_cidr_block_association_id                 = (known after apply)
+      [32m+[0m[0m ipv6_native                                    = false
+      [32m+[0m[0m map_public_ip_on_launch                        = false
+      [32m+[0m[0m owner_id                                       = (known after apply)
+      [32m+[0m[0m private_dns_hostname_type_on_launch            = (known after apply)
+      [32m+[0m[0m tags                                           = {
+          [32m+[0m[0m "Name" = "DEV-DB-Subnet-1"
+        }
+      [32m+[0m[0m tags_all                                       = {
+          [32m+[0m[0m "Name" = "DEV-DB-Subnet-1"
+        }
+      [32m+[0m[0m vpc_id                                         = (known after apply)
+    }
+
+[1m  # module.vpc.aws_subnet.private["0"][0m will be created
+[0m  [32m+[0m[0m resource "aws_subnet" "private" {
+      [32m+[0m[0m arn                                            = (known after apply)
+      [32m+[0m[0m assign_ipv6_address_on_creation                = false
+      [32m+[0m[0m availability_zone                              = "ap-northeast-2a"
+      [32m+[0m[0m availability_zone_id                           = (known after apply)
+      [32m+[0m[0m cidr_block                                     = "10.0.3.0/24"
+      [32m+[0m[0m enable_dns64                                   = false
+      [32m+[0m[0m enable_resource_name_dns_a_record_on_launch    = false
+      [32m+[0m[0m enable_resource_name_dns_aaaa_record_on_launch = false
+      [32m+[0m[0m id                                             = (known after apply)
+      [32m+[0m[0m ipv6_cidr_block_association_id                 = (known after apply)
+      [32m+[0m[0m ipv6_native                                    = false
+      [32m+[0m[0m map_public_ip_on_launch                        = false
+      [32m+[0m[0m owner_id                                       = (known after apply)
+      [32m+[0m[0m private_dns_hostname_type_on_launch            = (known after apply)
+      [32m+[0m[0m tags                                           = {
+          [32m+[0m[0m "Name" = "DEV-Private-Subnet-0"
+        }
+      [32m+[0m[0m tags_all                                       = {
+          [32m+[0m[0m "Name" = "DEV-Private-Subnet-0"
+        }
+      [32m+[0m[0m vpc_id                                         = (known after apply)
+    }
+
+[1m  # module.vpc.aws_subnet.private["1"][0m will be created
+[0m  [32m+[0m[0m resource "aws_subnet" "private" {
+      [32m+[0m[0m arn                                            = (known after apply)
+      [32m+[0m[0m assign_ipv6_address_on_creation                = false
+      [32m+[0m[0m availability_zone                              = "ap-northeast-2c"
+      [32m+[0m[0m availability_zone_id                           = (known after apply)
+      [32m+[0m[0m cidr_block                                     = "10.0.4.0/24"
+      [32m+[0m[0m enable_dns64                                   = false
+      [32m+[0m[0m enable_resource_name_dns_a_record_on_launch    = false
+      [32m+[0m[0m enable_resource_name_dns_aaaa_record_on_launch = false
+      [32m+[0m[0m id                                             = (known after apply)
+      [32m+[0m[0m ipv6_cidr_block_association_id                 = (known after apply)
+      [32m+[0m[0m ipv6_native                                    = false
+      [32m+[0m[0m map_public_ip_on_launch                        = false
+      [32m+[0m[0m owner_id                                       = (known after apply)
+      [32m+[0m[0m private_dns_hostname_type_on_launch            = (known after apply)
+      [32m+[0m[0m tags                                           = {
+          [32m+[0m[0m "Name" = "DEV-Private-Subnet-1"
+        }
+      [32m+[0m[0m tags_all                                       = {
+          [32m+[0m[0m "Name" = "DEV-Private-Subnet-1"
+        }
+      [32m+[0m[0m vpc_id                                         = (known after apply)
+    }
+
+[1m  # module.vpc.aws_subnet.public["0"][0m will be created
+[0m  [32m+[0m[0m resource "aws_subnet" "public" {
+      [32m+[0m[0m arn                                            = (known after apply)
+      [32m+[0m[0m assign_ipv6_address_on_creation                = false
+      [32m+[0m[0m availability_zone                              = "ap-northeast-2a"
+      [32m+[0m[0m availability_zone_id                           = (known after apply)
+      [32m+[0m[0m cidr_block                                     = "10.0.1.0/24"
+      [32m+[0m[0m enable_dns64                                   = false
+      [32m+[0m[0m enable_resource_name_dns_a_record_on_launch    = false
+      [32m+[0m[0m enable_resource_name_dns_aaaa_record_on_launch = false
+      [32m+[0m[0m id                                             = (known after apply)
+      [32m+[0m[0m ipv6_cidr_block_association_id                 = (known after apply)
+      [32m+[0m[0m ipv6_native                                    = false
+      [32m+[0m[0m map_public_ip_on_launch                        = true
+      [32m+[0m[0m owner_id                                       = (known after apply)
+      [32m+[0m[0m private_dns_hostname_type_on_launch            = (known after apply)
+      [32m+[0m[0m tags                                           = {
+          [32m+[0m[0m "Name" = "DEV-Public-Subnet-0"
+        }
+      [32m+[0m[0m tags_all                                       = {
+          [32m+[0m[0m "Name" = "DEV-Public-Subnet-0"
+        }
+      [32m+[0m[0m vpc_id                                         = (known after apply)
+    }
+
+[1m  # module.vpc.aws_subnet.public["1"][0m will be created
+[0m  [32m+[0m[0m resource "aws_subnet" "public" {
+      [32m+[0m[0m arn                                            = (known after apply)
+      [32m+[0m[0m assign_ipv6_address_on_creation                = false
+      [32m+[0m[0m availability_zone                              = "ap-northeast-2c"
+      [32m+[0m[0m availability_zone_id                           = (known after apply)
+      [32m+[0m[0m cidr_block                                     = "10.0.2.0/24"
+      [32m+[0m[0m enable_dns64                                   = false
+      [32m+[0m[0m enable_resource_name_dns_a_record_on_launch    = false
+      [32m+[0m[0m enable_resource_name_dns_aaaa_record_on_launch = false
+      [32m+[0m[0m id                                             = (known after apply)
+      [32m+[0m[0m ipv6_cidr_block_association_id                 = (known after apply)
+      [32m+[0m[0m ipv6_native                                    = false
+      [32m+[0m[0m map_public_ip_on_launch                        = true
+      [32m+[0m[0m owner_id                                       = (known after apply)
+      [32m+[0m[0m private_dns_hostname_type_on_launch            = (known after apply)
+      [32m+[0m[0m tags                                           = {
+          [32m+[0m[0m "Name" = "DEV-Public-Subnet-1"
+        }
+      [32m+[0m[0m tags_all                                       = {
+          [32m+[0m[0m "Name" = "DEV-Public-Subnet-1"
+        }
+      [32m+[0m[0m vpc_id                                         = (known after apply)
+    }
+
+[1m  # module.vpc.aws_vpc.main[0m will be created
+[0m  [32m+[0m[0m resource "aws_vpc" "main" {
+      [32m+[0m[0m arn                                  = (known after apply)
+      [32m+[0m[0m cidr_block                           = "10.0.0.0/16"
+      [32m+[0m[0m default_network_acl_id               = (known after apply)
+      [32m+[0m[0m default_route_table_id               = (known after apply)
+      [32m+[0m[0m default_security_group_id            = (known after apply)
+      [32m+[0m[0m dhcp_options_id                      = (known after apply)
+      [32m+[0m[0m enable_dns_hostnames                 = (known after apply)
+      [32m+[0m[0m enable_dns_support                   = true
+      [32m+[0m[0m enable_network_address_usage_metrics = (known after apply)
+      [32m+[0m[0m id                                   = (known after apply)
+      [32m+[0m[0m instance_tenancy                     = "default"
+      [32m+[0m[0m ipv6_association_id                  = (known after apply)
+      [32m+[0m[0m ipv6_cidr_block                      = (known after apply)
+      [32m+[0m[0m ipv6_cidr_block_network_border_group = (known after apply)
+      [32m+[0m[0m main_route_table_id                  = (known after apply)
+      [32m+[0m[0m owner_id                             = (known after apply)
+      [32m+[0m[0m tags                                 = {
+          [32m+[0m[0m "Name" = "DEV-vpc"
+        }
+      [32m+[0m[0m tags_all                             = {
+          [32m+[0m[0m "Name" = "DEV-vpc"
+        }
+    }
+
+[1mPlan:[0m 57 to add, 0 to change, 0 to destroy.
+[0m
